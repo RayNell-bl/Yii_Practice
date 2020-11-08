@@ -37,6 +37,11 @@ $config = [
                 '' => 'site/index',
                 'login' => 'site/login',
                 'logout' => 'site/logout',
+                [
+                'class' => 'yii\rest\UrlRule',
+                'controller' => 'user',
+                'except' => ['delete'],
+                ],
             ],
         ],
         'errorHandler' => [
