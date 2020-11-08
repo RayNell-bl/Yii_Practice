@@ -9,6 +9,8 @@ use Yii;
  *
  * @property int $gender_id
  * @property string $name
+ *
+ * @property User[] $users
  */
 class Gender extends \yii\db\ActiveRecord
 {
@@ -40,5 +42,15 @@ class Gender extends \yii\db\ActiveRecord
             'gender_id' => 'Gender ID',
             'name' => 'Name',
         ];
+    }
+
+    /**
+     * Gets query for [[Users]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUsers()
+    {
+        return $this->hasMany(User::className(), ['gender_id' => 'gender_id']);
     }
 }

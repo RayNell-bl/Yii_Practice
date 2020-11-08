@@ -3,11 +3,11 @@
 namespace app\models\queries;
 
 /**
- * This is the ActiveQuery class for [[\app\models\Teacher]].
+ * This is the ActiveQuery class for [[\app\models\Schedule]].
  *
- * @see \app\models\Teacher
+ * @see \app\models\Schedule
  */
-class UserQuery extends \yii\db\ActiveQuery
+class ScheduleQuery extends \yii\db\ActiveQuery
 {
     /*public function active()
     {
@@ -16,7 +16,7 @@ class UserQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \app\models\Teacher[]|array
+     * @return \app\models\Schedule[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +25,7 @@ class UserQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \app\models\Teacher|array|null
+     * @return \app\models\Schedule|array|null
      */
     public function one($db = null)
     {

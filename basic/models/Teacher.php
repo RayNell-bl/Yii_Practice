@@ -81,10 +81,10 @@ class Teacher extends \yii\db\ActiveRecord
 
     /**
      * {@inheritdoc}
-     * @return \app\models\queries\TeacherQuery the active query used by this AR class.
+     * @return \app\models\queries\UserQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new \app\models\queries\TeacherQuery(get_called_class());
+        return new \app\models\queries\UserQuery(get_called_class());
     }
 }

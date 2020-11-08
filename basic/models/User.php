@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "user".
@@ -13,6 +14,8 @@ use Yii;
  * @property string|null $patronymic
  * @property string|null $login
  * @property string|null $pass
+ * @property string|null $token
+ * @property int|null $expired_at
  * @property int $gender_id
  * @property string|null $birthday
  * @property int $role_id
@@ -23,11 +26,85 @@ use Yii;
  * @property Gender $gender
  * @property Role $role
  */
-class User extends \yii\db\ActiveRecord
+class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
-    /**
-     * {@inheritdoc}
-     */
+    const STATUS_DELETED = 0;
+    const STATUS_ACTIVE = 1;
+    
+    public function validatePassword($password){
+       
+        return Yii::$app->getSecurity()
+        ->validatePassword($password, $this->pass);
+
+    }
+
+    public function getId() {
+
+        return $this->getPrimaryKey();  
+
+    }
+
+    public static function findIdentity($id) {
+
+        return static::findOne(['user_id' => $id, 'active' =>
+        self::STATUS_ACTIVE]);
+
+    }
+
+    public static function findIdentityByAccessToken($token,$type=null) {
+
+        return static::find()->andWhere(['token' => $token])->andWhere(['>', 'expired_at', time()])->one();
+
+    }
+
+    public static function findByUsername($username) {
+
+        return static::findOne(['login' => $username, 'active'
+        => self::STATUS_ACTIVE]);
+
+    }
+
+    public function generateToken($expire) {
+
+        $this->expired_at = $expire;
+        $this->token = Yii::$app->security
+        ->generateRandomString();
+
+    }
+
+    public function tokenInfo() {
+
+        return [
+            'token' => $this->token,
+            'expiredAt' => $this->expired_at,
+            'fio' => $this->lastname.' '.$this->firstname. '
+            '.$this->patronymic,
+            'roles' => Yii::$app->authManager->
+            getRolesByUser($this->user_id)
+            ];
+
+    }
+
+    public function logout() {
+
+        $this->token = null;
+        $this->expired_at = null;
+        return $this->save();
+
+    }
+
+    public function getAuthKey()
+    {
+    
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        
+    }
+
+
+
     public static function tableName()
     {
         return 'user';
@@ -40,12 +117,12 @@ class User extends \yii\db\ActiveRecord
     {
         return [
             [['lastname', 'firstname', 'gender_id', 'role_id'], 'required'],
-            [['gender_id', 'role_id', 'active'], 'integer'],
+            [['expired_at', 'gender_id', 'role_id', 'active'], 'integer'],
             [['birthday'], 'safe'],
             [['lastname', 'firstname', 'patronymic', 'login'], 'string', 'max' => 50],
-            [['pass'], 'string', 'max' => 255],
+            [['pass', 'token'], 'string', 'max' => 255],
             [['gender_id'], 'exist', 'skipOnError' => true, 'targetClass' => Gender::className(), 'targetAttribute' => ['gender_id' => 'gender_id']],
-            [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => Role::className(), 'targetAttribute' => ['role_id' => 'role_id']],
+           
         ];
     }
 
@@ -61,6 +138,8 @@ class User extends \yii\db\ActiveRecord
             'patronymic' => 'Patronymic',
             'login' => 'Login',
             'pass' => 'Pass',
+            'token' => 'Token',
+            'expired_at' => 'Expired At',
             'gender_id' => 'Gender ID',
             'birthday' => 'Birthday',
             'role_id' => 'Role ID',
@@ -103,10 +182,7 @@ class User extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery|\app\models\queries\RoleQuery
      */
-    public function getRole()
-    {
-        return $this->hasOne(Role::className(), ['role_id' => 'role_id']);
-    }
+   
 
     /**
      * {@inheritdoc}
@@ -116,5 +192,4 @@ class User extends \yii\db\ActiveRecord
     {
         return new \app\models\queries\UserQuery(get_called_class());
     }
-
 }
