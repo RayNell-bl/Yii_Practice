@@ -32,7 +32,7 @@ class SiteController extends BaseController {
 		if ($user->load(Yii::$app->getRequest()->getBodyParams(),'') && $user->save()) {
 			$response = Yii::$app->getResponse();
 			$response->setStatusCodde(201);
-			$response->getHeaders()->set('Location', Url::toRoute(['view', 'id'=>$use->getPrimaryKey()], true));
+			$response->getHeaders()->set('Location', Url::toRoute(['view', 'id'=>$user->getPrimaryKey()], true));
 		}
 		elseif (!$user->hasErrors()) {
 			throw new ServerErrorHttpException(serialize($user->getErrors()));
