@@ -1,13 +1,13 @@
 <?
-
-namespace app\controllers;
-use yii\rest\Controller;
+use Controller;
 use yii\filters\ContentNegotiator;
 use yii\web\Response;
 use yii\filters\auth\QueryParamAuth;
+namespace app\controllers;
+
+
 
 class BaseController extends Controller {
-    
     public function behaviors() {
         return [
             'contentNegotiator' => [
