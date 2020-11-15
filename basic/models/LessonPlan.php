@@ -42,7 +42,7 @@ class LessonPlan extends ActiveRecord
             'subject_id' => function () { return $this->subject_id;},
             'subject_name' => function () { return $this->subject->name;},
             'user_id' => function () { return $this->user_id;},
-            'user_fio' => function () { return $this->user->user->firstname;},
+            'user_fio' => function () { return (($this->user->user->lastname)." ".($this->user->user->firstname));},
         ]);
     }
 
