@@ -14,6 +14,13 @@ use Yii;
  */
 class Gender extends \yii\db\ActiveRecord
 {
+    public function fields(){
+        $fields = parent::fields();
+        return array_merge($fields, [
+            'gender_id' => function () { return $this->gender_id;},
+            'name' => function () { return $this->name;},
+        ]);
+    }
     /**
      * {@inheritdoc}
      */

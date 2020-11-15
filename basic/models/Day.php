@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "day".
@@ -12,8 +13,16 @@ use Yii;
  *
  * @property Schedule[] $schedules
  */
-class Day extends \yii\db\ActiveRecord
+class Day extends ActiveRecord
 {
+
+    public function fields(){
+        $fields = parent::fields();
+        return array_merge($fields, [
+            'day_id' => function () { return $this->day_id;},
+            'name' => function () { return $this->name;},
+        ]);
+    }
     /**
      * {@inheritdoc}
      */
@@ -29,7 +38,7 @@ class Day extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'required'],
-            [['name'], 'string', 'max' => 20],
+            [['name'], 'string', 'max' => 50],
         ];
     }
 
