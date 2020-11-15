@@ -43,7 +43,6 @@ class Student extends ActiveRecord
             'birthday' => function () { return $this->user->birthday;},
             'roleName' => function () { return $this->user->roleName;},
             'active' => function () { return $this->user->active;},
-            'otdelName' => function () { return $this->otdel->name;},
         ]);
     }
 
