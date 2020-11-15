@@ -1,4 +1,5 @@
-<?
+<?php
+
 use Controller;
 use yii\filters\ContentNegotiator;
 use yii\web\Response;
