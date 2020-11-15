@@ -18,6 +18,30 @@ use Yii;
  */
 class Subject extends \yii\db\ActiveRecord
 {
+
+    public function loadAndSave($bodyParams){
+        $subject = ($this->isNewRecord) ? new Subject() : Subject::findOne($this->subject_id);
+        if ($subject->load($bodyParams, '') && $subject->save()) {
+            if ($this->isNewRecord) {
+                $this->subject_id = $subject->subject_id;
+            }
+            if ($this->load($bodyParams, '') && $this->save()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    public function fields(){
+        $fields = parent::fields();
+        return array_merge($fields, [
+            'subject_id' => function () { return $this->subject_id;},
+            'name' => function () { return $this->name;},
+            'otdel_id' => function () { return $this->otdel_id;},
+            'hours' => function () { return $this->hours;},
+            'active' => function () { return $this->active;},
+        ]);
+    }
     /**
      * {@inheritdoc}
      */

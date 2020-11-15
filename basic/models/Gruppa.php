@@ -19,6 +19,30 @@ use Yii;
  */
 class Gruppa extends \yii\db\ActiveRecord
 {
+
+    public function loadAndSave($bodyParams){
+        $gruppa = ($this->isNewRecord) ? new Gruppa() : Gruppa::findOne($this->gruppa_id);
+        if ($gruppa->load($bodyParams, '') && $gruppa->save()) {
+            if ($this->isNewRecord) {
+                $this->gruppa_id = $gruppa->gruppa_id;
+            }
+            if ($this->load($bodyParams, '') && $this->save()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    public function fields(){
+        $fields = parent::fields();
+        return array_merge($fields, [
+            'gruppa_id' => function () { return $this->gruppa_id;},
+            'name' => function () { return $this->name;},
+            'special_id' => function () { return $this->special_id;},
+            'date_begin' => function () { return $this->date_begin;},
+            'date_end' => function () { return $this->date_end;},
+        ]);
+    }
     /**
      * {@inheritdoc}
      */

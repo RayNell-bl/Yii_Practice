@@ -15,6 +15,28 @@ use Yii;
  */
 class Classroom extends \yii\db\ActiveRecord
 {
+
+    public function loadAndSave($bodyParams){
+        $classroom = ($this->isNewRecord) ? new Classroom() : Classroom::findOne($this->classroom_id);
+        if ($classroom->load($bodyParams, '') && $classroom->save()) {
+            if ($this->isNewRecord) {
+                $this->classroom_id = $classroom->classroom_id;
+            }
+            if ($this->load($bodyParams, '') && $this->save()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    public function fields(){
+        $fields = parent::fields();
+        return array_merge($fields, [
+            'classroom_id' => function () { return $this->classroom_id;},
+            'name' => function () { return $this->name;},
+            'active' => function () { return $this->active;},
+        ]);
+    }
     /**
      * {@inheritdoc}
      */
